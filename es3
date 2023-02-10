@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct n {
+        int val;
+        struct n * left;
+        struct n * right;
+} nodo;
+typedef nodo * albero;
+
+albero createVal(int val);
+albero creaAlbero1(void);albero creaAlbero2(void);albero creaAlbero3(void);
+void print(albero t);
+void stampa(albero T);
+int f(albero t);
+int depth(albero t);
+int max(int a,int b);
+void inizializza(albero t,int v[],int liv);
+void verifica(albero t,int elem[],int v[],int liv);
+
+int profondita(albero t);
+int f(albero t);
+void aux(albero t1,albero t2,int v[],int level1,int level2);
+
+int main(){
+    int ris=0;
+    albero T1,T2,T3;
+    T1 = creaAlbero1(); T2 = creaAlbero2(); T3 = creaAlbero3();
+    printf("\nT1: "); stampa(T1);
+    printf("\nT2: "); stampa(T2);
+    printf("\nT3: "); stampa(T3);
+
+   //LA FUNZIONE DA SVILUPPARE VIENE USATA QUI
+
+
+   printf("T1: %d\n",f(T1));
+   printf("T2: %d\n",f(T2));
+   printf("T3: %d\n",f(T3));
+    
+   return 0;
+}
+
+//
+// TODO: SVILUPPARE QUI DENTRO QUANTO RICHIESTO
+//
+int f(albero t)
+{
+    if(t==NULL)
+        return 1;
+    int prof,i;
+    prof=profondita(t);
+    int v[prof];
+    for (i=0; i<prof; i++) {
+        v[i]=0;
+    }
+    aux(t->right, t->left, v, 1,1);
+    for (i=0; i<prof; i++) {
+        if(v[i]==1)
+            return 1;
+    }
+    return 0;
+}
+void aux(albero t1,albero t2,int v[],int level1,int level2)
+{
+    if(t1==NULL&&t2==NULL)
+        return;
+    if(t1==NULL||t2==NULL)
+        return;
+    if(t1->val==t2->val&&level1==level2)
+        v[level1-1]=1;
+    aux(t1->right, t2->left, v, level1+1, level2+1);
+    aux(t1->left, t2->right, v, level1+1, level2+1);
+}
+int profondita(albero t)
+{
+    int d,s;
+    if(t==NULL)
+        return 0;
+    d=profondita(t->right);
+    s=profondita(t->left);
+    if(d>s)
+        return d+1;
+    return s+1;
+}
+albero creaAlbero1() {
+    albero tmp = createVal(7);
+    tmp->left = createVal(3);tmp->left->left = createVal(9);tmp->left->right = createVal(9);
+    tmp->right = createVal(8);tmp->right->left = createVal(9);tmp->right->right = createVal(9);
+    tmp->right->right->left = createVal(11); tmp->right->right->right = createVal(6);
+    return tmp;
+}
+
+albero creaAlbero2() {
+    albero tmp = createVal(7);
+    tmp->right = createVal(3);tmp->right->right = createVal(9);tmp->right->left = createVal(10);
+    tmp->left = createVal(1);tmp->left->right = createVal(5);tmp->left->left = createVal(12);
+    tmp->left->left->right = createVal(11);tmp->left->left->left = createVal(6);
+    return tmp;
+}
+
+albero creaAlbero3() {
+    albero tmp = createVal(7);
+    tmp->right = createVal(3);tmp->right->right = createVal(9);tmp->right->left = createVal(10);
+    tmp->left = createVal(4);tmp->left->right = createVal(5);tmp->left->left = createVal(12);
+    tmp->left->left->right = createVal(2);tmp->left->left->left = createVal(6);
+    return tmp;
+}
+
+void print(albero t){
+       if(t==NULL)return;
+       else{printf(" (");print(t->left);printf(" %d ",t->val);print(t->right);printf(") ");}
+}
+
+void stampa(albero T){print(T);printf("\n");}
+
+albero createVal(int val) {
+    albero tmp = malloc(sizeof(nodo));
+    tmp->val = val;    tmp->left = NULL;    tmp->right = NULL;
+    return tmp;
+}
